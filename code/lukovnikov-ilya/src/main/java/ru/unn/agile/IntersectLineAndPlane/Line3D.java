@@ -53,8 +53,7 @@ public class Line3D {
         if(plane.getA()*getL()+plane.getB()*getM()+plane.getC()*getN()== 0 &
                 plane.getA()*getX0()+plane.getB()*getY0()+ plane.getC()*getZ0()+plane.getD()!=0)
             return "Line and plane parallel";
-        else if(plane.getA()*getL()+plane.getB()*getM()+plane.getC()*getN()== 0 &
-                plane.getA()*getX0()+plane.getB()*getY0()+ plane.getC()*getZ0()+plane.getD()==0)
+        else if(plane.getA()*getX0()+plane.getB()*getY0()+ plane.getC()*getZ0()+plane.getD()==0)
             return "Line lies in the plane";
         else
 
