@@ -2,16 +2,17 @@ package ru.unn.agile.IntersectLineAndPlane;
 
 
 public class Plane3D {
-    private double coefficientA;
-    private double coefficientB;
-    private double coefficientC;
-    private double coefficientD;
+    private final double coefficientA;
+    private final double coefficientB;
+    private final double coefficientC;
+    private final double coefficientD;
 
-    public Plane3D(final double A,final double B, final double C, final double D){
-        this.coefficientA = A;
-        this.coefficientB = B;
-        this.coefficientC = C;
-        this.coefficientD = D;
+    public Plane3D(final double factorA, final double factorB,
+                   final double factorC, final double factorD) {
+        this.coefficientA = factorA;
+        this.coefficientB = factorB;
+        this.coefficientC = factorC;
+        this.coefficientD = factorD;
     }
 
     public double getA() {

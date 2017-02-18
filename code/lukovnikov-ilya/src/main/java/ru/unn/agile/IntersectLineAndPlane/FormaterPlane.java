@@ -1,8 +1,8 @@
 package ru.unn.agile.IntersectLineAndPlane;
 
 
-public class FormaterPlane {
-    private FormaterPlane(){}
+public final class  FormaterPlane {
+    private FormaterPlane() { }
 
     public static double formatPositiveDouble(final double value) {
         if (value < 0) {
@@ -12,11 +12,11 @@ public class FormaterPlane {
         }
     }
 
-    public static String getFormatedPlane( final Plane3D plane){
+    public static String getFormatedPlane(final Plane3D plane) {
         StringBuffer buffer = new StringBuffer();
-        if (plane.getA() == 0.0 & plane.getB() == 0.0 & plane.getC() == 0.0)
-            throw  new IllegalArgumentException("arguments A, B, C can't be null");
-        else{
+        if (plane.getA() == 0.0 & plane.getB() == 0.0 & plane.getC() == 0.0) {
+            throw new IllegalArgumentException("arguments A, B, C can't be null");
+        } else {
             double coefficientA = formatPositiveDouble(plane.getA());
             buffer.append(plane.getA() < 0 ? "-" : "");
             buffer.append(coefficientA + "x");
