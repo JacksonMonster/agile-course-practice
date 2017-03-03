@@ -82,10 +82,10 @@ public class ViewModel {
         return calculationDisabled.get();
     }
 
-    public StringProperty resultProperty() {
+    public StringProperty resultValueProperty() {
         return result;
     }
-    public final String getResult() {
+    public final String getResultValue() {
         return result.get();
     }
     public StringProperty statusProperty() {

@@ -25,7 +25,7 @@ public class ViewModelTests {
     public void canSetDefaultValues() {
         assertEquals("", viewModel.sqMeterTextBoxProperty().get());
         assertEquals(Cons.TO_AR_MULTIPLIER, viewModel.constantProperty().get());
-        assertEquals("", viewModel.resultProperty().get());
+        assertEquals("", viewModel.resultValueProperty().get());
         assertEquals(Status.WAITING.toString(), viewModel.statusProperty().get());
     }
 
