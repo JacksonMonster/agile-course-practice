@@ -95,4 +95,13 @@ public class ViewModelTests {
         assertEquals(Status.READY.toString(), viewModel.statusProperty().get());
     }
 
+    @Test
+    public void consToKilometerMulHasCorrectResult() {
+        viewModel.sqMeterTextBoxProperty().set("1");
+        viewModel.constantProperty().set(Cons.TO_KILOMETER_MULTIPLIER);
+
+        viewModel.convert();
+
+        assertEquals("1.0E-6", viewModel.resultValueProperty().get());
+    }
 }
