@@ -239,8 +239,6 @@ include "code/Queue/Infrastructure"
 project(":code/Queue/Infrastructure").name = "Queue-Infrastructure"
 // Пономарев Георгий
 // Пономарев Никита
-include "code/ponomarev-nikita/Model"
-project(":code/ponomarev-nikita/Model").name = "ponomarev-nikita-Model"
 // Редькин Михаил
 include "code/Deque/Model"
 project(":code/Deque/Model").name = "Yevtushin-Valery-Model"
@@ -263,6 +261,12 @@ include "code/matrix-operations/Infrastructure"
 project(":code/matrix-operations/Infrastructure").name = "matrix-operations-Infrastructure"
 
 // Рябинкин Евгений
+include "code/SpaceConverter/Model"
+project(":code/SpaceConverter/Model").name = "SpaceConverter-Model"
+include "code/SpaceConverter/ViewModel"
+project(":code/SpaceConverter/ViewModel").name = "SpaceConverter-ViewModel"
+include "code/SpaceConverter/View"
+project(":code/SpaceConverter/View").name = "SpaceConverter-View"
 // Сахаров Алексей
 // Сиротин Никита
 // Скребков Артём
