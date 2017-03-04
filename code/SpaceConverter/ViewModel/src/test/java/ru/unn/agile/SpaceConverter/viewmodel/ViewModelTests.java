@@ -3,17 +3,24 @@ package ru.unn.agile.SpaceConverter.viewmodel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import ru.unn.agile.SquareConverter.SquareConverter.Cons;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class ViewModelTests {
     private ViewModel viewModel;
 
+    public void setExternalViewModel(final ViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
     @Before
     public void setUp() {
-        viewModel = new ViewModel();
+        if (viewModel == null) {
+            viewModel = new ViewModel(new FakeLogger());
+        }
     }
 
     @After
@@ -185,4 +192,125 @@ public class ViewModelTests {
 
         assertEquals("3.861E-7", viewModel.resultValueProperty().get());
     }
+
+    @Test
+    public void viewModelConstructorThrowsExceptionWithNullLogger() {
+        try {
+            new ViewModel(null);
+            fail("Exception wasn't thrown");
+        } catch (IllegalArgumentException ex) {
+            assertEquals("Logger parameter can't be null", ex.getMessage());
+        } catch (Exception ex) {
+            fail("Invalid exception type");
+        }
+    }
+
+    @Test
+    public void logIsEmptyInTheBeginning() {
+        List<String> log = viewModel.getLog();
+
+        assertTrue(log.isEmpty());
+    }
+
+    @Test
+    public void logContainsProperMessageAfterConvertation() {
+        setInputData();
+        viewModel.convert();
+        String message = viewModel.getLog().get(0);
+
+        assertTrue(message.matches(".*" + LogMessages.CALCULATE_WAS_PRESSED + ".*"));
+    }
+
+    @Test
+    public void logContainsInputArgumentsAfterConvertation() {
+        setInputData();
+
+        viewModel.convert();
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*" + viewModel.sqMeterTextBoxProperty().get()
+                + ".*"));
+    }
+
+    @Test
+    public void argumentsInfoIssProperlyFormatted() {
+        setInputData();
+
+        viewModel.convert();
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*Argument"
+                + ": sqMeter = " + viewModel.sqMeterTextBoxProperty().get() + ".*"));
+    }
+
+    @Test
+    public void consTypeIsMentionedInTheLog() {
+        setInputData();
+
+        viewModel.convert();
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*TO_AR_MULTIPLIER.*"));
+    }
+
+    @Test
+    public void canPutSeveralLogMessages() {
+        setInputData();
+
+        viewModel.convert();
+        viewModel.convert();
+        viewModel.convert();
+
+        assertEquals(3, viewModel.getLog().size());
+    }
+
+    @Test
+    public void canSeeConsChangeInLog() {
+        setInputData();
+
+        viewModel.onConsChanged(Cons.TO_AR_MULTIPLIER, Cons.TO_HECTARE_MULTIPLIER);
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*" + LogMessages.CONS_WAS_CHANGED
+                + "TO_HECTARE_MULTIPLIER.*"));
+    }
+
+    @Test
+    public void consIsNotLoggedIfNotChanged() {
+        viewModel.onConsChanged(Cons.TO_AR_MULTIPLIER, Cons.TO_HECTARE_MULTIPLIER);
+
+        viewModel.onConsChanged(Cons.TO_HECTARE_MULTIPLIER, Cons.TO_AR_MULTIPLIER);
+
+        assertEquals(2, viewModel.getLog().size());
+    }
+
+    /*@Test
+    public void argumentsAreCorrectlyLogged() {
+        setInputData();
+
+        viewModel.onFocusChanged(Boolean.TRUE, Boolean.FALSE);
+
+        String message = viewModel.getLog().get(0);
+        assertTrue(message.matches(".*" + LogMessages.EDITING_FINISHED
+                + "Input arguments are: \\["
+                + viewModel.sqMeterTextBoxProperty().get() + "; " + "\\]"));
+    }*/
+
+    @Test
+    public void convertIsNotCalledWhenButtonIsDisabled() {
+        viewModel.convert();
+
+        assertTrue(viewModel.getLog().isEmpty());
+    }
+
+    @Test
+    public void doNotLogSameParametersTwiceWithPartialInput() {
+        viewModel.sqMeterTextBoxProperty().set("12");
+        viewModel.onFocusChanged(Boolean.TRUE, Boolean.FALSE);
+        viewModel.sqMeterTextBoxProperty().set("12");
+        viewModel.onFocusChanged(Boolean.TRUE, Boolean.FALSE);
+
+        assertEquals(1, viewModel.getLog().size());
+    }
+
 }

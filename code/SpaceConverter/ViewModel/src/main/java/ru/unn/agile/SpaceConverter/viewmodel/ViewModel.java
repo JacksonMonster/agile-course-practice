@@ -1,4 +1,5 @@
 package ru.unn.agile.SpaceConverter.viewmodel;
+
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -18,12 +19,28 @@ public class ViewModel {
     private final ObjectProperty<Cons> constant = new SimpleObjectProperty<>();
     private final BooleanProperty calculationDisabled = new SimpleBooleanProperty();
 
+    private final StringProperty logs = new SimpleStringProperty();
     private final StringProperty result = new SimpleStringProperty();
     private final StringProperty status = new SimpleStringProperty();
 
-    private final List<ValueChangeListener> valueChangedListeners = new ArrayList<>();
+    private ILogger logger;
+    private List<ValueChangeListener> valueChangedListeners;
+
+    public final void setLogger(final ILogger logger) {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger parameter can't be null");
+        }
+        this.logger = logger;
+    }
 
     public ViewModel() {
+        init();
+    }
+    public ViewModel(final ILogger logger) {
+        setLogger(logger);
+        init();
+    }
+    private void init() {
         sqMeterValue.set("");
         constant.set(Cons.TO_AR_MULTIPLIER);
         result.set("");
@@ -35,7 +52,10 @@ public class ViewModel {
             }
             @Override
             protected boolean computeValue() {
-                return getInputStatus() == Status.READY;
+                if (getInputStatus() == Status.READY) {
+                    return true;
+                }
+                return false;
             }
         };
         calculationDisabled.bind(couldCalculate.not());
@@ -43,14 +63,14 @@ public class ViewModel {
         final List<StringProperty> fields = new ArrayList<StringProperty>() { {
             add(sqMeterValue);
         } };
-
+        valueChangedListeners = new ArrayList<>();
         for (StringProperty field : fields) {
             final ValueChangeListener listener = new ValueChangeListener();
             field.addListener(listener);
             valueChangedListeners.add(listener);
         }
-
     }
+
 
     public void convert() {
         if (calculationDisabled.get()) {
@@ -60,6 +80,47 @@ public class ViewModel {
         double sqM = Double.parseDouble(sqMeterValue.get());
         result.set(Double.toString(constant.get().toDistanationUnit(sqM)));
         status.set(Status.SUCCESS.toString());
+
+        StringBuilder message = new StringBuilder(LogMessages.CALCULATE_WAS_PRESSED);
+        message.append("Argument")
+                .append(": sqMeter = ").append(sqMeterValue.get())
+                .append(" Constant: ").append(constant.get().toString()).append(".");
+        logger.log(message.toString());
+        updateLogs();
+    }
+
+    public void onConsChanged(final Cons oldValue, final Cons newValue) {
+        if (oldValue.equals(newValue)) {
+            return;
+        }
+        StringBuilder message = new StringBuilder(LogMessages.CONS_WAS_CHANGED);
+        message.append(newValue.toString());
+        logger.log(message.toString());
+        updateLogs();
+    }
+
+    public void onFocusChanged(final Boolean oldValue, final Boolean newValue) {
+        if (!oldValue && newValue) {
+            return;
+        }
+
+        for (ValueChangeListener listener : valueChangedListeners) {
+            if (listener.isChanged()) {
+                StringBuilder message = new StringBuilder(LogMessages.EDITING_FINISHED);
+                message.append("Input arguments are: [")
+                        .append(sqMeterValue.get()).append("]");
+                logger.log(message.toString());
+                updateLogs();
+
+                listener.cache();
+                break;
+            }
+        }
+    }
+
+
+    public final List<String> getLog() {
+        return logger.getLog();
     }
 
     public StringProperty sqMeterTextBoxProperty() {
@@ -81,7 +142,12 @@ public class ViewModel {
     public final boolean getCalculationDisabled() {
         return calculationDisabled.get();
     }
-
+    public StringProperty logsProperty() {
+        return logs;
+    }
+    public final String getLogs() {
+        return logs.get();
+    }
     public StringProperty resultValueProperty() {
         return result;
     }
@@ -111,13 +177,35 @@ public class ViewModel {
         return inputStatus;
     }
 
+    private void updateLogs() {
+        List<String> fullLog = logger.getLog();
+        String record = new String();
+        for (String log : fullLog) {
+            record += log + "\n";
+        }
+        logs.set(record);
+    }
+
     private class ValueChangeListener implements ChangeListener<String> {
+        private String prevValue = new String();
+        private String curValue = new String();
         @Override
         public void changed(final ObservableValue<? extends String> observable,
                             final String oldValue, final String newValue) {
+            if (oldValue.equals(newValue)) {
+                return;
+            }
             status.set(getInputStatus().toString());
+            curValue = newValue;
+        }
+        public boolean isChanged() {
+            return !prevValue.equals(curValue);
+        }
+        public void cache() {
+            prevValue = curValue;
         }
     }
+
 
 }
 
@@ -135,3 +223,12 @@ enum Status {
         return name;
     }
 }
+
+final class LogMessages {
+    public static final String CALCULATE_WAS_PRESSED = "Calculate. ";
+    public static final String CONS_WAS_CHANGED = "Cons was changed to ";
+    public static final String EDITING_FINISHED = "Updated input. ";
+
+    private LogMessages() { }
+}
+

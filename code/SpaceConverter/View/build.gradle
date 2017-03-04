@@ -2,6 +2,7 @@ apply from:   rootDir.getAbsolutePath() + '/code/config/scripts/javafx.plugin'
 
 dependencies {
     compile project(':SpaceConverter-ViewModel')
+	compile project(':SpaceConverter-Infrastructure')
 }
 
 sourceSets {

@@ -267,6 +267,8 @@ include "code/SpaceConverter/ViewModel"
 project(":code/SpaceConverter/ViewModel").name = "SpaceConverter-ViewModel"
 include "code/SpaceConverter/View"
 project(":code/SpaceConverter/View").name = "SpaceConverter-View"
+include "code/SpaceConverter/Infrastructure"
+project(":code/SpaceConverter/Infrastructure").name = "SpaceConverter-Infrastructure"
 // Сахаров Алексей
 // Сиротин Никита
 // Скребков Артём

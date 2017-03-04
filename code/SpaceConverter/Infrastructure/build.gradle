@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':SpaceConverter-ViewModel')
+    testCompile project(':SpaceConverter-ViewModel').sourceSets.test.output
+}
