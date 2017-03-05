@@ -17,14 +17,14 @@ public class TxtLogger implements ILogger {
     private final BufferedWriter writer;
     private final String filename;
 
-    private static String now() {
+    private static String justnow() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW, Locale.ENGLISH);
         return sdf.format(cal.getTime());
     }
 
-    public TxtLogger(final String filename) {
-        this.filename = filename;
+    public TxtLogger(final String fname) {
+        this.filename = fname;
 
         BufferedWriter logWriter = null;
         try {
@@ -36,9 +36,9 @@ public class TxtLogger implements ILogger {
     }
 
     @Override
-    public void log(final String s) {
+    public void log(final String val) {
         try {
-            writer.write(now() + " > " + s);
+            writer.write(justnow() + " > " + val);
             writer.newLine();
             writer.flush();
         } catch (Exception e) {
@@ -48,15 +48,15 @@ public class TxtLogger implements ILogger {
 
     @Override
     public List<String> getLog() {
-        BufferedReader reader;
+        BufferedReader readere;
         ArrayList<String> log = new ArrayList<String>();
         try {
-            reader = new BufferedReader(new FileReader(filename));
-            String line = reader.readLine();
+            readere = new BufferedReader(new FileReader(filename));
+            String line = readere.readLine();
 
             while (line != null) {
                 log.add(line);
-                line = reader.readLine();
+                line = readere.readLine();
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

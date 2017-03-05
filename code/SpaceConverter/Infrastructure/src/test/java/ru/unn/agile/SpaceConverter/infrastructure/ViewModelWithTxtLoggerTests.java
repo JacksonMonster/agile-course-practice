@@ -5,7 +5,7 @@ import ru.unn.agile.SpaceConverter.viewmodel.ViewModelTests;
 
 public class ViewModelWithTxtLoggerTests extends ViewModelTests {
     @Override
-    public void setUp() {
+    public void setUpNow() {
         TxtLogger realLogger =
             new TxtLogger("./ViewModel_with_TxtLogger_Tests.log");
         super.setExternalViewModel(new ViewModel(realLogger));

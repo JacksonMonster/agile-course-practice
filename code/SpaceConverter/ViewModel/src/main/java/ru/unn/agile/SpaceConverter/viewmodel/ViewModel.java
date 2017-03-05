@@ -46,7 +46,7 @@ public class ViewModel {
         result.set("");
         status.set(Status.WAITING.toString());
 
-        BooleanBinding couldCalculate = new BooleanBinding() {
+        BooleanBinding couldCalculat = new BooleanBinding() {
             {
                 super.bind(sqMeterValue);
             }
@@ -58,7 +58,7 @@ public class ViewModel {
                 return false;
             }
         };
-        calculationDisabled.bind(couldCalculate.not());
+        calculationDisabled.bind(couldCalculat.not());
 
         final List<StringProperty> fields = new ArrayList<StringProperty>() { {
             add(sqMeterValue);
@@ -99,8 +99,8 @@ public class ViewModel {
         updateLogs();
     }
 
-    public void onFocusChanged(final Boolean oldValue, final Boolean newValue) {
-        if (!oldValue && newValue) {
+    public void onFocusChanged(final Boolean oldVal, final Boolean newVal) {
+        if (!oldVal && newVal) {
             return;
         }
 
@@ -187,22 +187,23 @@ public class ViewModel {
     }
 
     private class ValueChangeListener implements ChangeListener<String> {
-        private String prevValue = new String();
-        private String curValue = new String();
+        private String prevVal = new String();
+        private String curVal = new String();
         @Override
         public void changed(final ObservableValue<? extends String> observable,
-                            final String oldValue, final String newValue) {
-            if (oldValue.equals(newValue)) {
+                            final String oldVal,
+                            final String newVal) {
+            if (oldVal.equals(newVal)) {
                 return;
             }
             status.set(getInputStatus().toString());
-            curValue = newValue;
+            curVal = newVal;
         }
         public boolean isChanged() {
-            return !prevValue.equals(curValue);
+            return !prevVal.equals(curVal);
         }
         public void cache() {
-            prevValue = curValue;
+            prevVal = curVal;
         }
     }
 
@@ -215,12 +216,12 @@ enum Status {
     BAD_FORMAT("Bad format"),
     SUCCESS("Success");
 
-    private final String name;
-    Status(final String name) {
-        this.name = name;
+    private final String val;
+    Status(final String val) {
+        this.val = val;
     }
     public String toString() {
-        return name;
+        return val;
     }
 }
 

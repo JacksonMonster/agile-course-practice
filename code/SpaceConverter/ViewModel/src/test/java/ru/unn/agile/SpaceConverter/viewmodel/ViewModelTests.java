@@ -17,7 +17,7 @@ public class ViewModelTests {
     }
 
     @Before
-    public void setUp() {
+    public void setUpNow() {
         if (viewModel == null) {
             viewModel = new ViewModel(new FakeLogger());
         }
@@ -194,7 +194,7 @@ public class ViewModelTests {
     }
 
     @Test
-    public void viewModelConstructorThrowsExceptionWithNullLogger() {
+    public void viewModelConstructorThrowsExceptionWithNullLogg() {
         try {
             new ViewModel(null);
             fail("Exception wasn't thrown");
@@ -206,7 +206,7 @@ public class ViewModelTests {
     }
 
     @Test
-    public void logIsEmptyInTheBeginning() {
+    public void logIsEmptyInBeginning() {
         List<String> log = viewModel.getLog();
 
         assertTrue(log.isEmpty());

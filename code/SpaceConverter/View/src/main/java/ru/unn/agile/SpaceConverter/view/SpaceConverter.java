@@ -29,8 +29,8 @@ public class SpaceConverter {
         final ChangeListener<Boolean> focusChangeListener = new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observable,
-                                final Boolean oldValue, final Boolean newValue) {
-                viewModel.onFocusChanged(oldValue, newValue);
+                                final Boolean oldVal, final Boolean newVal) {
+                viewModel.onFocusChanged(oldVal, newVal);
             }
         };
 
